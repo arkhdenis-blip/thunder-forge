@@ -66,7 +66,7 @@ class Station(val tier: Int, val role: Int, val x: Float, val y: Float) {
     val cap = 16
 }
 
-class Cust(val tier: Int, val slot: Int) {
+class Cust(val tier: Int, var slot: Int) {
     var qty = 1
     var pat = 1f
     var patMax = 26f
