@@ -98,7 +98,7 @@ abstract class ForgeWorkers(ctx: android.content.Context) : ForgeSim(ctx) {
                 a.timer = 0f
                 val s = t.st(a.srcRole)
                 val avail = if (a.srcRole == 0) s.stock else s.outN
-                if (avail <= 0) { a.st = 0; a.carry = 0; a.kind = 0; return }
+                if (avail <= 0) { if (a.carry > 0) a.st = 3 else { a.st = 0; a.kind = 0 }; return }
                 if (a.srcRole == 0) s.stock-- else s.outN--
                 a.carry++
                 a.kind = a.srcRole + 1
@@ -114,14 +114,13 @@ abstract class ForgeWorkers(ctx: android.content.Context) : ForgeSim(ctx) {
             if (a.timer > 0.09f) {
                 a.timer = 0f
                 val d = t.st(a.dstRole)
-                if (a.dstRole == 3) {
-                    if (d.stock < d.cap) d.stock++
-                } else {
-                    if (d.inN < d.cap) d.inN++
+                val room = if (a.dstRole == 3) d.stock < d.cap else d.inN < d.cap
+                if (room) {
+                    if (a.dstRole == 3) d.stock++ else d.inN++
+                    a.carry--
+                    d.pop = 0.5f
+                    if (a.carry <= 0) { a.carry = 0; a.kind = 0; a.st = 0 }
                 }
-                a.carry--
-                d.pop = 0.5f
-                if (a.carry <= 0) { a.carry = 0; a.kind = 0; a.st = 0 }
             }
         }
     }
