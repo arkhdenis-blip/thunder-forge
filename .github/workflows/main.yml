@@ -27,8 +27,11 @@ jobs:
           gradle-version: '8.7'
           cache: 'false'
 
+      - name: Show memory
+        run: free -h && nproc
+
       - name: Assemble
-        run: gradle assembleDebug --no-daemon --stacktrace
+        run: gradle assembleDebug --no-daemon --max-workers=1 --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
