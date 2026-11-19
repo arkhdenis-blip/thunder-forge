@@ -184,7 +184,7 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
                         if (pCarry == 0) pKind = 0
                         sfx.drop(); near.pop = 0.6f
                     }
-                } else if (pKind == 0 && near.outN > 0) {
+                } else if ((pKind == 0 || (pKind == R_ING && pTier == t.i)) && pCarry < pCap() && near.outN > 0) {
                     if (pAct > 0.075f) {
                         pAct = 0f; near.outN--
                         pKind = R_ING; pTier = t.i; pCarry++
@@ -199,7 +199,7 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
                         if (pCarry == 0) pKind = 0
                         sfx.drop(); near.pop = 0.6f
                     }
-                } else if (pKind == 0 && near.outN > 0) {
+                } else if ((pKind == 0 || (pKind == R_ITEM && pTier == t.i)) && pCarry < pCap() && near.outN > 0) {
                     if (pAct > 0.075f) {
                         pAct = 0f; near.outN--
                         pKind = R_ITEM; pTier = t.i; pCarry++
