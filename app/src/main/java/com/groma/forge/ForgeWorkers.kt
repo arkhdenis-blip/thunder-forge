@@ -155,7 +155,9 @@ abstract class ForgeWorkers(ctx: android.content.Context) : ForgeSim(ctx) {
             if (s.done || spotMax(s)) continue
             if (s.kind == 8 && s.tier > 0 && !terrs[s.tier - 1].open) continue
             val d = sqrt((s.x - px) * (s.x - px) + (s.y - py) * (s.y - py))
-            if (d > 1.25f) continue
+            if (d > 1.25f) { s.hold = max(0f, s.hold - dt * 2f); continue }
+            s.hold += dt
+            if (s.hold < HOLD) continue
             val cost = spotCost(s)
             if (coins <= 0f) continue
             val rate = max(cost * 0.55f, 45f)
