@@ -9,7 +9,6 @@ import android.graphics.RadialGradient
 import android.graphics.RectF
 import android.graphics.Shader
 import kotlin.math.abs
-import kotlin.math.cl
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
