@@ -289,7 +289,7 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
     override fun surfaceChanged(h: SurfaceHolder, f: Int, w: Int, hgt: Int) {
         W = w.toFloat()
         H = hgt.toFloat()
-        if (zoom == 1f) zoom = cl(W / (470f * dp), 0.62f, 1.5f)
+        if (zoom == 1f) zoom = cl(W / (300f * dp), 0.9f, 1.8f)
     }
 
     override fun surfaceDestroyed(h: SurfaceHolder) {
