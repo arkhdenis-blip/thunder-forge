@@ -50,6 +50,7 @@ const val GOAL = 300000f
 const val R_ORE = 1
 const val R_ING = 2
 const val R_ITEM = 3
+const val HOLD = 0.9f
 
 val TF_BOLD: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
 val TF_BLACK: Typeface = Typeface.create("sans-serif-black", Typeface.BOLD)
@@ -100,6 +101,7 @@ class Spot(val tier: Int, val kind: Int, val x: Float, val y: Float) {
     var paid = 0f
     var pulse = 0f
     var done = false
+    var hold = 0f
 }
 
 class Terr(val i: Int, val ox: Float) {
