@@ -154,7 +154,7 @@ class Sfx {
     }
     fun angry() { add(300f, 120f, 0.28f, 0.16f, false, 0f) }
     fun ui() { add(880f, 660f, 0.05f, 0.09f, false, 0f) }
-    fanfare@ fun fanfare() {
+    fun fanfare() {
         val n = floatArrayOf(523f, 659f, 784f, 1046f, 1318f)
         for (i in n.indices) add(n[i], n[i], 0.45f, 0.15f, false, i * 0.11f)
     }
