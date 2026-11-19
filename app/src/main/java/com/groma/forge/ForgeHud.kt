@@ -146,6 +146,13 @@ abstract class ForgeHud(ctx: android.content.Context) : ForgeDraw(ctx) {
             PL.pathEffect = DashPathEffect(floatArrayOf(9f, 7f), (time * 22f) % 16f)
             c.drawOval(X - 30f, Y - 15f, X + 30f, Y + 15f, PL)
             PL.pathEffect = null
+            if (s.hold > 0f) {
+                val hf = cl(s.hold / HOLD, 0f, 1f)
+                PL.color = if (hf >= 1f) Color.parseColor(C_GOLD) else Color.parseColor("#FFFFFFFF")
+                PL.strokeWidth = 3f
+                rect.set(X - 30f, Y - 15f, X + 30f, Y + 15f)
+                c.drawArc(rect, -90f, 360f * hf, false, PL)
+            }
             if (can) {
                 P.shader = RadialGradient(X, Y, 34f,
                     intArrayOf(Color.parseColor("#3AFFC23D"), Color.parseColor("#00FFC23D")),
