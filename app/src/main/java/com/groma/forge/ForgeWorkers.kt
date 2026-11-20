@@ -53,7 +53,7 @@ abstract class ForgeWorkers(ctx: android.content.Context) : ForgeSim(ctx) {
                 val s = t.vein
                 if (s.stock < s.cap) {
                     a.timer += dt
-                    if (a.timer >= mineTime(t) * 1.7f) {
+                    if (a.timer >= 1.6f) {
                         a.timer = 0f
                         s.stock = min(s.cap, s.stock + yieldN(t))
                         a.swing = 1f
@@ -190,9 +190,9 @@ abstract class ForgeWorkers(ctx: android.content.Context) : ForgeSim(ctx) {
             2 -> { t.smiths++; toast("КУЗНЕЦ ПРИШЁЛ") }
             3 -> { t.sellers++; toast("ПРОДАВЕЦ НАНЯТ") }
             4 -> { t.vein.lv++; toast("ЖИЛА БОГАЧЕ · ур." + t.vein.lv) }
-            5 -> { t.furn.lv++; toast("ГОРН ЖАРЧЕ · ур." + t.furn.lv) }
-            6 -> { t.anv.lv++; toast("МОЛОТ СИЛЬНЕЕ · ур." + t.anv.lv) }
-            7 -> { t.cnt.lv++; toast("ЦЕНА ВЫШЕ · ур." + t.cnt.lv) }
+            5 -> { t.furn.lv++; toast("ГОРН ×" + furnYield(t) + " · ур." + t.furn.lv) }
+            6 -> { t.anv.lv++; toast("МОЛОТ ×" + anvYield(t) + " · ур." + t.anv.lv) }
+            7 -> { t.cnt.lv++; toast("СКЛАД " + t.cnt.cap + " · ур." + t.cnt.lv) }
             8 -> {
                 t.open = true
                 s.done = true
