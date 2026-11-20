@@ -234,14 +234,14 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
                     0.7f, 0.7f, 1.4f + Math.random().toFloat() * 1.8f,
                     Color.parseColor(if (Math.random() < .5) C_EMBER else C_GOLD), -0.2f))
             if (t.furn.prog >= 1f) {
-                t.furn.prog = 0f; t.furn.inN--; t.furn.outN++; t.furn.pop = 1f
+                t.furn.prog = 0f; t.furn.inN--;t.furn.outN = min(t.furn.cap, t.furn.outN + furnYield(t)); t.furn.pop = 1f
             }
         } else t.furn.hot = max(0.12f, t.furn.hot - dt * 0.6f)
 
         if (t.anv.inN > 0 && t.anv.outN < t.anv.cap) {
             t.anv.prog += dt / anvTime(t)
             if (t.anv.prog >= 1f) {
-                t.anv.prog = 0f; t.anv.inN--; t.anv.outN++; t.anv.pop = 1f
+                t.anv.prog = 0f; t.anv.inN--;t.anv.outN = min(t.anv.cap, t.anv.outN + anvYield(t))  ; t.anv.pop = 1f
                 sfx.hammer()
                 burst(t.anv.x, t.anv.y - 0.55f, Color.parseColor(C_GOLD), 8, 3.2f, 3.4f)
                 if (abs(t.anv.x - px) + abs(t.anv.y - py) < 12f) shake = max(shake, 2.2f)
@@ -249,17 +249,17 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
         }
 
         t.spawnT -= dt
-        val maxQ = 4
+        val maxQ = 4 + (t.cnt.lv - 1) / 2  
         if (t.spawnT <= 0f && t.custs.size < maxQ) {
-            t.spawnT = 3.4f + Math.random().toFloat() * 2.2f
+            t.spawnT = max(1.2f, 3.0f - t.i * 0.4f - (t.cnt.lv - 1) * 0.05f) + Math.random().toFloat() * 1.5f  
             val used = HashSet<Int>()
             for (c in t.custs) used.add(c.slot)
             var slot = -1
             for (k in 0 until maxQ) if (!used.contains(k)) { slot = k; break }
             if (slot >= 0) {
                 val c = Cust(t.i, slot)
-                c.qty = 1 + (Math.random() * 3).toInt()
-                c.patMax = 24f + c.qty * 5f
+                val qb = 1 + t.i * 2 + (t.cnt.lv - 1) / 3; c.qty = qb + (Math.random() * (qb + 2)).toInt()
+                c.patMax = 18f + c.qty * 3f  
                 c.pat = c.patMax
                 c.x = t.cnt.x - 5.5f
                 c.y = 12.6f + slot * 1.18f
@@ -292,7 +292,7 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
                             piles.add(Pile(t.cnt.x + 0.9f, t.cnt.y + 0.4f, gain, 0f, 0f))
                         }
                         served++
-                        rep = min(100f, rep + 2.5f)
+                        rep = min(100f, rep + dt * 0.8f)  
                         c.state = 2; c.face = 1
                         sfx.done()
                         burst(c.x, c.y - 0.7f, Color.parseColor(C_MOSS), 8, 2.4f, 1.6f)
@@ -300,7 +300,7 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
                 }
                 if (c.pat <= 0f) {
                     c.state = 2; c.face = -1
-                    rep = max(0f, rep - 7f)
+                    rep = max(0f, rep - 4f)
                     angryN++
                     sfx.angry()
                     burst(c.x, c.y - 0.7f, Color.parseColor(C_RED), 8, 2.2f, 1.6f)
