@@ -278,18 +278,24 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
                 if (abs(c.x - tx) < 0.15f) { c.x = tx; c.state = 1 }
             } else if (c.state == 1) {
                 c.pat -= dt
-                if (c.slot == 0 && t.cnt.stock >= c.qty) {
+                val nearMe = abs(px - t.cnt.x) + abs(py - t.cnt.y) < 2.2f
+                if (c.slot == 0 && t.cnt.stock >= c.qty && (t.sellers > 0 || nearMe)) {
                     c.t += dt / sellTime(t)
                     if (c.t >= 1f) {
                         t.cnt.stock -= c.qty
                         val gain = price(t) * c.qty
-                        piles.add(Pile(t.cnt.x + 0.9f, t.cnt.y + 0.4f, gain, 0f, 0f))
+                        if (t.sellers > 0) {
+                            coins += gain
+                            earned += gain
+                            ftxt(c.x, c.y - 1.1f, "+" + gain.toInt(), Color.parseColor(C_GOLD))
+                        } else {
+                            piles.add(Pile(t.cnt.x + 0.9f, t.cnt.y + 0.4f, gain, 0f, 0f))
+                        }
                         served++
                         rep = min(100f, rep + 2.5f)
                         c.state = 2; c.face = 1
                         sfx.done()
                         burst(c.x, c.y - 0.7f, Color.parseColor(C_MOSS), 8, 2.4f, 1.6f)
-                        ftxt(c.x, c.y - 1.1f, "+" + gain.toInt(), Color.parseColor(C_GOLD))
                     }
                 }
                 if (c.pat <= 0f) {
