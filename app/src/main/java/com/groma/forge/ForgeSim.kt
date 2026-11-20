@@ -39,14 +39,14 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
 
     protected fun checkQuests() {
         when (quest) {
-            0 -> if (mined >= 4) questDone(25f)
-            1 -> if (terrs[0].furn.inN > 0 || terrs[0].furn.outN > 0) questDone(30f)
-            2 -> if (terrs[0].anv.inN > 0 || terrs[0].anv.outN > 0) questDone(40f)
-            3 -> if (served > 0) questDone(60f)
-            4 -> if (earned >= 120f) questDone(80f)
-            5 -> if (actors.size > 0) questDone(150f)
-            6 -> if (terrs[1].open) questDone(600f)
-            7 -> if (earned >= GOAL) questDone(5000f)
+            0 -> if (mined >= 4) questDone(10f)
+            1 -> if (terrs[0].furn.inN > 0 || terrs[0].furn.outN > 0) questDone(12f)
+            2 -> if (terrs[0].anv.inN > 0 || terrs[0].anv.outN > 0) questDone(15f)
+            3 -> if (served > 0) questDone(20f)
+            4 -> if (earned >= 120f) questDone(30f)
+            5 -> if (actors.size > 0) questDone(60f)
+            6 -> if (terrs[1].open) questDone(300f)
+            7 -> if (earned >= GOAL) questDone(2000f)
         }
     }
 
@@ -90,8 +90,8 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
         camX = lerp(camX, px, min(1f, dt * 4.2f))
         camY = lerp(camY, py, min(1f, dt * 4.2f))
 
-        playerWork(dt)
         for (t in terrs) if (t.open) terrace(t, dt)
+        playerWork(dt)
         for (a in actors) worker(a, dt)
         fundSpots(dt)
 
@@ -220,6 +220,7 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
     }
 
     protected fun terrace(t: Terr, dt: Float) {
+        t.cnt.cap = 40 + t.cnt.lv * 8
         t.vein.pop = max(0f, t.vein.pop - dt * 3f)
         t.furn.pop = max(0f, t.furn.pop - dt * 3f)
         t.anv.pop = max(0f, t.anv.pop - dt * 3f)
@@ -264,19 +265,21 @@ abstract class ForgeSim(ctx: android.content.Context) : ForgeBase(ctx) {
             for (k in 0 until maxQ) if (!used.contains(k)) { slot = k; break }
             if (slot >= 0) {
                 val c = Cust(t.i, slot)
-                val qb = 1 + t.i * 2 + (t.cnt.lv - 1) / 3; c.qty = qb + (Math.random() * (qb + 2)).toInt()
+                val qb = 1 + t.i * 2 + (t.cnt.lv - 1) / 3
+                c.qty = qb + (Math.random() * qb).toInt()
+                if (c.qty < 1) c.qty = 1
                 c.patMax = 18f + c.qty * 3f
                 c.pat = c.patMax
-                c.x = t.cnt.x - 5.5f
-                c.y = 12.6f + slot * 1.18f
+                c.x = t.cnt.x + 0.9f + slot * 0.95f
+                c.y = t.cnt.y - 0.4f - slot * 0.55f
                 t.custs.add(c)
             }
         }
         var i = t.custs.size - 1
         while (i >= 0) {
             val c = t.custs[i]
-            val tx = t.cnt.x
-            val ty = 12.6f + c.slot * 1.18f
+            val tx = t.cnt.x + 0.9f + c.slot * 0.95f
+            val ty = t.cnt.y - 0.4f - c.slot * 0.55f
             c.bob += dt * 6f
             if (c.state == 0) {
                 c.x = lerp(c.x, tx, min(1f, dt * 2.2f))
