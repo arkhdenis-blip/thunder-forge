@@ -137,8 +137,8 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
     protected fun carCap() = 5 + (carLv - 1) * 2
     protected fun yieldN(t: Terr) = 1 + (t.vein.lv - 1)
     protected fun mineTime(t: Terr) = 0.55f / (1f + 0.07f * (t.vein.lv - 1))
-    protected fun furnYield(t: Terr) = 1 + (t.furn.lv - 1) / 3
-    protected fun anvYield(t: Terr) = 1 + (t.anv.lv - 1) / 3
+    protected fun furnYield(t: Terr) = 1 + (t.furn.lv - 1) / 2
+    protected fun anvYield(t: Terr) = 1 + (t.anv.lv - 1) / 2
     protected fun smithsAt(t: Terr, role: Int): Int {
         var n = 0
         for (a in actors) if (a.tier == t.i && a.job == 2 && a.post == role) n++
@@ -193,17 +193,17 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
         val t = terrs[s.tier]
         val m = TIER_COST_MUL[s.tier]
         return when (s.kind) {
-            0 -> 60f * Math.pow(2.15, t.miners.toDouble()).toFloat() * m
-            1 -> 95f * Math.pow(2.10, t.carriers.toDouble()).toFloat() * m
-            2 -> 150f * Math.pow(2.30, t.smiths.toDouble()).toFloat() * m
-            3 -> 200f * Math.pow(2.30, t.sellers.toDouble()).toFloat() * m
-            4 -> 50f * Math.pow(1.72, (t.vein.lv - 1).toDouble()).toFloat() * m
-            5 -> 80f * Math.pow(1.78, (t.furn.lv - 1).toDouble()).toFloat() * m
-            6 -> 110f * Math.pow(1.78, (t.anv.lv - 1).toDouble()).toFloat() * m
-            7 -> 140f * Math.pow(1.85, (t.cnt.lv - 1).toDouble()).toFloat() * m
+            0 -> 120f * Math.pow(2.15, t.miners.toDouble()).toFloat() * m
+            1 -> 180f * Math.pow(2.10, t.carriers.toDouble()).toFloat() * m
+            2 -> 220f * Math.pow(2.30, t.smiths.toDouble()).toFloat() * m
+            3 -> 260f * Math.pow(2.30, t.sellers.toDouble()).toFloat() * m
+            4 -> 60f * Math.pow(1.72, (t.vein.lv - 1).toDouble()).toFloat() * m
+            5 -> 100f * Math.pow(1.78, (t.furn.lv - 1).toDouble()).toFloat() * m
+            6 -> 140f * Math.pow(1.78, (t.anv.lv - 1).toDouble()).toFloat() * m
+            7 -> 180f * Math.pow(1.85, (t.cnt.lv - 1).toDouble()).toFloat() * m
             8 -> if (s.tier == 1) 2600f else 48000f
-            9 -> 90f * Math.pow(1.85, (capLv - 1).toDouble()).toFloat()
-            else -> 75f * Math.pow(1.90, (spdLv - 1).toDouble()).toFloat()
+            9 -> 110f * Math.pow(1.85, (capLv - 1).toDouble()).toFloat()
+            else -> 90f * Math.pow(1.90, (spdLv - 1).toDouble()).toFloat()
         }
     }
 
@@ -212,13 +212,13 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
         1 -> terrs[s.tier].carriers >= 4
         2 -> terrs[s.tier].smiths >= 2
         3 -> terrs[s.tier].sellers >= 2
-        4 -> terrs[s.tier].vein.lv >= 12
-        5 -> terrs[s.tier].furn.lv >= 12
-        6 -> terrs[s.tier].anv.lv >= 12
-        7 -> terrs[s.tier].cnt.lv >= 12
+        4 -> terrs[s.tier].vein.lv >= 8
+        5 -> terrs[s.tier].furn.lv >= 8
+        6 -> terrs[s.tier].anv.lv >= 8
+        7 -> terrs[s.tier].cnt.lv >= 8
         8 -> terrs[s.tier].open
-        9 -> capLv >= 12
-        else -> spdLv >= 10
+        9 -> capLv >= 8
+        else -> spdLv >= 6
     }
 
     protected fun spotName(s: Spot): String = when (s.kind) {
@@ -238,17 +238,17 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
     protected fun spotDesc(s: Spot): String {
         val t = terrs[s.tier]
         return when (s.kind) {
-            0 -> "сам добывает руду в кучу · " + t.miners + "/3"
+            0 -> "копает медленно, сам не тянет · " + t.miners + "/3"
             1 -> "возит руду, слитки и изделия · " + t.carriers + "/4"
             2 -> "ускоряет горн и наковальню · " + t.smiths + "/2"
-            3 -> "быстрее обслуживает очередь · " + t.sellers + "/2"
-            4 -> "больше руды за удар · ур. " + t.vein.lv
-            5 -> "плавит ×" + furnYield(t) + " слитков за цикл · ур. " + t.furn.lv
-            6 -> "кует ×" + anvYield(t) + " изделий за цикл · ур. " + t.anv.lv
-            7 -> "цена выше + очередь длиннее · ур. " + t.cnt.lv
+            3 -> "торгует без тебя, деньги на счёт · " + t.sellers + "/2"
+            4 -> "больше руды за удар · ур. " + t.vein.lv + "/8"
+            5 -> "плавит ×" + furnYield(t) + " слитков за цикл · ур. " + t.furn.lv + "/8"
+            6 -> "кует ×" + anvYield(t) + " изделий за цикл · ур. " + t.anv.lv + "/8"
+            7 -> "цена выше, склад и очередь больше · ур. " + t.cnt.lv + "/8"
             8 -> TIER_NAME[s.tier] + " · " + ITEM_NAME[s.tier] + " по " + ITEM_BASE[s.tier].toInt()
-            9 -> "носишь " + pCap() + " предметов"
-            else -> "бежишь " + String.format(Locale.US, "%.1f", pSpeed()) + " кл/с"
+            9 -> "носишь " + pCap() + " предметов · ур. " + capLv + "/8"
+            else -> "бежишь " + String.format(Locale.US, "%.1f", pSpeed()) + " кл/с · ур. " + spdLv + "/6"
         }
     }
 
