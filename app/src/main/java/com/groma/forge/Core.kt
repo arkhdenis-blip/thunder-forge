@@ -31,7 +31,7 @@ val TIER_ING = intArrayOf(Color.parseColor("#FF9A55"), Color.parseColor("#C9DCEA
 val TIER_ITEM = intArrayOf(Color.parseColor("#FFC23D"), Color.parseColor("#8FA6B8"), Color.parseColor("#FFD45E"))
 val TIER_NAME = arrayOf("МЕДНАЯ ТЕРРАСА", "ЖЕЛЕЗНАЯ ТЕРРАСА", "ЗОЛОТАЯ ТЕРРАСА")
 val ITEM_NAME = arrayOf("меч", "щит", "корону")
-val ITEM_BASE = floatArrayOf(12f, 45f, 200f)
+val ITEM_BASE = floatArrayOf(6f, 45f, 200f)
 val TIER_COST_MUL = floatArrayOf(1f, 7f, 48f)
 
 const val GOAL = 300000f
@@ -52,7 +52,7 @@ class Station(val tier: Int, val role: Int, val x: Float, val y: Float) {
     var lv = 1
     var hot = 0f
     var pop = 0f
-    val cap = 16
+    var cap = 16
 }
 
 class Cust(val tier: Int, var slot: Int) {
