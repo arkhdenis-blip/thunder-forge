@@ -43,7 +43,7 @@ val TIER_ITEM = intArrayOf(
 )
 val TIER_NAME = arrayOf("МЕДНАЯ ТЕРРАСА", "ЖЕЛЕЗНАЯ ТЕРРАСА", "ЗОЛОТАЯ ТЕРРАСА")
 val ITEM_NAME = arrayOf("меч", "щит", "корону")
-val ITEM_BASE = floatArrayOf(7f, 30f, 135f)
+val ITEM_BASE = floatArrayOf(12f, 45f, 200f) 
 val TIER_COST_MUL = floatArrayOf(1f, 7f, 48f)
 
 const val GOAL = 300000f
@@ -116,7 +116,7 @@ class Terr(val i: Int, val ox: Float) {
     var carriers = 0
     var smiths = 0
     var sellers = 0
-    var spawnT = 2f
+    var spawnT = 1.5f  
     val custs = ArrayList<Cust>()
     fun st(role: Int): Station = when (role) {
         0 -> vein
