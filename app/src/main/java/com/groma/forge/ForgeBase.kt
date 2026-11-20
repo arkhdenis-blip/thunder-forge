@@ -136,6 +136,8 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
     protected fun pSpeed() = 4.3f + (spdLv - 1) * 0.32f
     protected fun carCap() = 5 + (carLv - 1) * 2
     protected fun yieldN(t: Terr) = 1 + (t.vein.lv - 1)
+    protected fun furnYield(t: Terr) = 1 + (t.furn.lv - 1) / 3  
+    protected fun anvYield(t: Terr) = 1 + (t.anv.lv - 1) / 3
     protected fun mineTime(t: Terr) = 0.55f / (1f + 0.07f * (t.vein.lv - 1))
     protected fun smithsAt(t: Terr, role: Int): Int {
         var n = 0
@@ -241,9 +243,9 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
             2 -> "ускоряет горн и наковальню · " + t.smiths + "/2"
             3 -> "быстрее обслуживает очередь · " + t.sellers + "/2"
             4 -> "больше руды за удар · ур. " + t.vein.lv
-            5 -> "быстрее плавка · ур. " + t.furn.lv
-            6 -> "быстрее ковка · ур. " + t.anv.lv
-            7 -> "дороже изделия · ур. " + t.cnt.lv
+            5 -> "плавит ×" + furnYield(t) + " слитков за цикл · ур. " + t.furn.lv
+            6 -> "кует ×" + anvYield(t) + " изделий за цикл · ур. " + t.anv.lv
+            7 -> "цена выше + очередь длиннее · ур. " + t.cnt.lv
             8 -> TIER_NAME[s.tier] + " · " + ITEM_NAME[s.tier] + " по " + ITEM_BASE[s.tier].toInt()
             9 -> "носишь " + pCap() + " предметов"
             else -> "бежишь " + String.format(Locale.US, "%.1f", pSpeed()) + " кл/с"
