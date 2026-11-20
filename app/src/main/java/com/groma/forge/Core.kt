@@ -102,6 +102,8 @@ class Spot(val tier: Int, val kind: Int, val x: Float, val y: Float) {
     var pulse = 0f
     var done = false
     var hold = 0f
+    var labelText = ""
+    var labelW = 0f
 }
 
 class Terr(val i: Int, val ox: Float) {
