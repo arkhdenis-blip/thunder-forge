@@ -26,24 +26,12 @@ const val C_MUTE = "#A89684"
 const val C_STONE = "#3E362D"
 const val C_STONE2 = "#4A4136"
 
-val TIER_ORE = intArrayOf(
-    Color.parseColor("#E07A3C"),
-    Color.parseColor("#9FB6C8"),
-    Color.parseColor("#FFD45E")
-)
-val TIER_ING = intArrayOf(
-    Color.parseColor("#FF9A55"),
-    Color.parseColor("#C9DCEA"),
-    Color.parseColor("#FFE999")
-)
-val TIER_ITEM = intArrayOf(
-    Color.parseColor("#FFC23D"),
-    Color.parseColor("#8FA6B8"),
-    Color.parseColor("#FFD45E")
-)
+val TIER_ORE = intArrayOf(Color.parseColor("#E07A3C"), Color.parseColor("#9FB6C8"), Color.parseColor("#FFD45E"))
+val TIER_ING = intArrayOf(Color.parseColor("#FF9A55"), Color.parseColor("#C9DCEA"), Color.parseColor("#FFE999"))
+val TIER_ITEM = intArrayOf(Color.parseColor("#FFC23D"), Color.parseColor("#8FA6B8"), Color.parseColor("#FFD45E"))
 val TIER_NAME = arrayOf("МЕДНАЯ ТЕРРАСА", "ЖЕЛЕЗНАЯ ТЕРРАСА", "ЗОЛОТАЯ ТЕРРАСА")
 val ITEM_NAME = arrayOf("меч", "щит", "корону")
-val ITEM_BASE = floatArrayOf(12f, 45f, 200f) 
+val ITEM_BASE = floatArrayOf(12f, 45f, 200f)
 val TIER_COST_MUL = floatArrayOf(1f, 7f, 48f)
 
 const val GOAL = 300000f
@@ -116,7 +104,7 @@ class Terr(val i: Int, val ox: Float) {
     var carriers = 0
     var smiths = 0
     var sellers = 0
-    var spawnT = 1.5f  
+    var spawnT = 1.5f
     val custs = ArrayList<Cust>()
     fun st(role: Int): Station = when (role) {
         0 -> vein
