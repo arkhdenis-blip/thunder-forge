@@ -169,6 +169,7 @@ abstract class ForgeWorkers(ctx: android.content.Context) : ForgeSim(ctx) {
             if (s.paid >= cost) {
                 s.paid = 0f
                 applySpot(s)
+                s.hold = 0f
                 s.pulse = 1f
                 sfx.build()
                 buzz(45)
