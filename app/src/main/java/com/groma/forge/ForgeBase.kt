@@ -136,9 +136,8 @@ abstract class ForgeBase(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callbac
     protected fun pSpeed() = 4.3f + (spdLv - 1) * 0.32f
     protected fun carCap() = 5 + (carLv - 1) * 2
     protected fun yieldN(t: Terr) = 1 + (t.vein.lv - 1)
-    protected fun furnYield(t: Terr) = 1 + (t.furn.lv - 1) / 3  
+    protected fun furnYield(t: Terr) = 1 + (t.furn.lv - 1) / 3
     protected fun anvYield(t: Terr) = 1 + (t.anv.lv - 1) / 3
-    protected fun mineTime(t: Terr) = 0.55f / (1f + 0.07f * (t.vein.lv - 1))
     protected fun smithsAt(t: Terr, role: Int): Int {
         var n = 0
         for (a in actors) if (a.tier == t.i && a.job == 2 && a.post == role) n++
