@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.LinearGradient
 import android.graphics.Paint
-import android.graphics.RadialGradient
 import android.graphics.RectF
 import android.graphics.Shader
 import kotlin.math.abs
@@ -15,6 +14,8 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 abstract class ForgeHud(ctx: android.content.Context) : ForgeDraw(ctx) {
+
+    private val dashFx = DashPathEffect(floatArrayOf(9f, 7f), 0f)
 
     override fun render(c: Canvas) {
         P.style = Paint.Style.FILL
@@ -117,60 +118,59 @@ abstract class ForgeHud(ctx: android.content.Context) : ForgeDraw(ctx) {
             P.color = Color.parseColor("#2A211A")
             c.drawRect(X - 3f, Y - 40f, X + 3f, Y, P)
             val fl = 0.7f + 0.3f * sin(time * 7f + p[0])
-            P.shader = RadialGradient(X, Y - 44f, 46f * fl,
-                intArrayOf(Color.parseColor("#88FF7A1A"), Color.parseColor("#00FF7A1A")),
-                null, Shader.TileMode.CLAMP)
-            c.drawCircle(X, Y - 44f, 46f * fl, P)
-            P.shader = null
             P.color = Color.parseColor(C_EMBER)
-            c.drawCircle(X, Y - 44f, 5.5f * fl, P)
+            P.alpha = 70
+            c.drawCircle(X, Y - 44f, 30f * fl, P)
+            P.alpha = 130
+            c.drawCircle(X, Y - 44f, 14f * fl, P)
+            P.alpha = 255
             P.color = Color.parseColor(C_GOLD)
             c.drawCircle(X, Y - 45f, 3f * fl, P)
         }
     }
 
     protected fun drawSpots(c: Canvas) {
+        PT.typeface = TF_MONO
+        PT.textSize = 14f
         for (s in spots) {
-            if (s.kind == 8 && s.tier > 0 && !terrs[s.tier - 1].open) continue
             if (s.done) continue
+            if (s.kind == 8 && s.tier > 0 && !terrs[s.tier - 1].open) continue
             if (s.kind != 8 && !terrs[s.tier].open) continue
+            val maxed = spotMax(s)
+            if (maxed) continue
+            val cost = spotCost(s)
+            val can = coins >= cost
+            val col = if (can) Color.parseColor(C_GOLD) else Color.parseColor("#7A6A55")
             val X = ix(s.x, s.y)
             val Y = iy(s.x, s.y)
-            val maxed = spotMax(s)
-            val cost = spotCost(s)
-            val can = coins >= cost && !maxed
-            val col = if (maxed) Color.parseColor("#4A4136")
-            else if (can) Color.parseColor(C_GOLD) else Color.parseColor("#7A6A55")
             PL.color = col
             PL.strokeWidth = 2.6f
-            PL.pathEffect = DashPathEffect(floatArrayOf(9f, 7f), (time * 22f) % 16f)
+            PL.pathEffect = dashFx
             c.drawOval(X - 30f, Y - 15f, X + 30f, Y + 15f, PL)
             PL.pathEffect = null
-            if (s.hold > 0f) {
-                val hf = cl(s.hold / HOLD, 0f, 1f)
-                PL.color = if (hf >= 1f) Color.parseColor(C_GOLD) else Color.parseColor("#FFFFFFFF")
-                PL.strokeWidth = 3f
-                rect.set(X - 30f, Y - 15f, X + 30f, Y + 15f)
-                c.drawArc(rect, -90f, 360f * hf, false, PL)
-            }
             if (can) {
-                P.shader = RadialGradient(X, Y, 34f,
-                    intArrayOf(Color.parseColor("#3AFFC23D"), Color.parseColor("#00FFC23D")),
-                    null, Shader.TileMode.CLAMP)
+                P.color = Color.parseColor("#22FFC23D")
                 c.drawOval(X - 34f, Y - 17f, X + 34f, Y + 17f, P)
-                P.shader = null
             }
             if (s.paid > 0f) {
                 PL.color = Color.parseColor(C_EMBER)
                 PL.strokeWidth = 4f
                 rect.set(X - 30f, Y - 15f, X + 30f, Y + 15f)
                 c.drawArc(rect, -90f, 360f * cl(s.paid / cost, 0f, 1f), false, PL)
+            } else if (s.hold > 0f) {
+                val hf = cl(s.hold / HOLD, 0f, 1f)
+                PL.color = if (hf >= 1f) Color.parseColor(C_GOLD) else Color.parseColor("#FFFFFFFF")
+                PL.strokeWidth = 3f
+                rect.set(X - 30f, Y - 15f, X + 30f, Y + 15f)
+                c.drawArc(rect, -90f, 360f * hf, false, PL)
             }
             drawSpotIcon(c, X, Y - 4f, s.kind, col)
+            val label = fmt(cost)
+            if (s.labelText != label) {
+                s.labelText = label
+                s.labelW = PT.measureText(label)
+            }
             PT.textAlign = Paint.Align.CENTER
-            PT.typeface = TF_MONO
-            PT.textSize = 14f
-            val label = if (maxed) "МАКС" else fmt(cost)
             PT.color = Color.parseColor("#AA000000")
             c.drawText(label, X + 1f, Y + 27f, PT)
             PT.color = col
@@ -201,6 +201,8 @@ abstract class ForgeHud(ctx: android.content.Context) : ForgeDraw(ctx) {
                 PT.typeface = TF_BLACK
                 PT.color = col
                 c.drawText("$", X, Y + 4f, PT)
+                PT.textSize = 14f
+                PT.typeface = TF_MONO
             }
             4 -> {
                 path.reset(); path.moveTo(X, Y - 10f); path.lineTo(X + 8f, Y)
